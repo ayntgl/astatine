@@ -318,6 +318,9 @@ type MessageAllowedMentions struct {
 	// A list of user IDs to allow. This cannot be used when specifying
 	// AllowedMentionTypeUsers in the Parse slice.
 	Users []string `json:"users,omitempty"`
+
+	// RepliedUser specifies whether to mention the author of the message being replied to.
+	RepliedUser bool `json:"replied_user"`
 }
 
 // A MessageAttachment stores data for message attachments.
