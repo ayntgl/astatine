@@ -27,7 +27,7 @@ const VERSION = "0.24.0"
 // 		e.g. "Bot ..."
 // Or if it is an OAuth2 token, it must be prefixed with "Bearer "
 //		e.g. "Bearer ..."
-func New(token string) (s *Session, err error) {
+func New(token string) (s *Session) {
 
 	// Create an empty Session interface.
 	s = &Session{

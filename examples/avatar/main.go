@@ -34,11 +34,7 @@ func init() {
 func main() {
 
 	// Create a new Discord session using the provided login information.
-	dg, err := astatine.New("Bot " + Token)
-	if err != nil {
-		fmt.Println("error creating Discord session,", err)
-		return
-	}
+	dg := astatine.New("Bot " + Token)
 
 	// Declare these here so they can be used in the below two if blocks and
 	// still carry over to the end of this function.
@@ -82,7 +78,7 @@ func main() {
 	// Now lets format our base64 image into the proper format Discord wants
 	// and then call UserUpdate to set it as our user's Avatar.
 	avatar := fmt.Sprintf("data:%s;base64,%s", contentType, base64img)
-	_, err = dg.UserUpdate("", avatar)
+	_, err := dg.UserUpdate("", avatar)
 	if err != nil {
 		fmt.Println(err)
 	}

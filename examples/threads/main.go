@@ -24,7 +24,7 @@ var games map[string]time.Time = make(map[string]time.Time)
 func init() { flag.Parse() }
 
 func main() {
-	s, _ := astatine.New("Bot " + *BotToken)
+	s := astatine.New("Bot " + *BotToken)
 	s.AddHandler(func(s *astatine.Session, r *astatine.Ready) {
 		fmt.Println("Bot is ready")
 	})

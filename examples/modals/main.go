@@ -24,14 +24,7 @@ var s *astatine.Session
 
 func init() {
 	flag.Parse()
-}
-
-func init() {
-	var err error
-	s, err = astatine.New("Bot " + *BotToken)
-	if err != nil {
-		log.Fatalf("Invalid bot parameters: %v", err)
-	}
+	s = astatine.New("Bot " + *BotToken)
 }
 
 var (

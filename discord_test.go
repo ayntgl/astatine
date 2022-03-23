@@ -26,9 +26,7 @@ var (
 func TestMain(m *testing.M) {
 	fmt.Println("Init is being called.")
 	if envBotToken != "" {
-		if d, err := New(envBotToken); err == nil {
-			dgBot = d
-		}
+		dgBot = New(envBotToken)
 	}
 
 	if envOAuth2Token == "" {
@@ -36,9 +34,7 @@ func TestMain(m *testing.M) {
 	}
 
 	if envOAuth2Token != "" {
-		if d, err := New(envOAuth2Token); err == nil {
-			dg = d
-		}
+		dg = New(envOAuth2Token)
 	}
 
 	os.Exit(m.Run())
@@ -54,10 +50,7 @@ func TestNewToken(t *testing.T) {
 		t.Skip("Skipping New(token), DGU_TOKEN not set")
 	}
 
-	d, err := New(envOAuth2Token)
-	if err != nil {
-		t.Fatalf("New(envToken) returned error: %+v", err)
-	}
+	d := New(envOAuth2Token)
 
 	if d == nil {
 		t.Fatal("New(envToken), d is nil, should be Session{}")
@@ -73,12 +66,10 @@ func TestOpenClose(t *testing.T) {
 		t.Skip("Skipping TestClose, DGU_TOKEN not set")
 	}
 
-	d, err := New(envOAuth2Token)
-	if err != nil {
-		t.Fatalf("TestClose, New(envToken) returned error: %+v", err)
-	}
+	d := New(envOAuth2Token)
 
-	if err = d.Open(); err != nil {
+	err := d.Open()
+	if err != nil {
 		t.Fatalf("TestClose, d.Open failed: %+v", err)
 	}
 
@@ -108,11 +99,13 @@ func TestOpenClose(t *testing.T) {
 	// UpdateStatus - maybe we move this into wsapi_test.go but the websocket
 	// created here is needed.  This helps tests that the websocket was setup
 	// and it is working.
-	if err = d.UpdateGameStatus(0, time.Now().String()); err != nil {
+	err = d.UpdateGameStatus(0, time.Now().String())
+	if err != nil {
 		t.Errorf("UpdateStatus error: %+v", err)
 	}
 
-	if err = d.Close(); err != nil {
+	err = d.Close()
+	if err != nil {
 		t.Fatalf("TestClose, d.Close failed: %+v", err)
 	}
 }
