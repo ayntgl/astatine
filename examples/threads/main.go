@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/ayntgl/astatine"
 )
 
 // Flags
@@ -24,14 +24,14 @@ var games map[string]time.Time = make(map[string]time.Time)
 func init() { flag.Parse() }
 
 func main() {
-	s, _ := discordgo.New("Bot " + *BotToken)
-	s.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+	s, _ := astatine.New("Bot " + *BotToken)
+	s.AddHandler(func(s *astatine.Session, r *astatine.Ready) {
 		fmt.Println("Bot is ready")
 	})
-	s.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
+	s.AddHandler(func(s *astatine.Session, m *astatine.MessageCreate) {
 		if strings.Contains(m.Content, "ping") {
 			if ch, err := s.State.Channel(m.ChannelID); err != nil || !ch.IsThread() {
-				thread, err := s.MessageThreadStartComplex(m.ChannelID, m.ID, &discordgo.ThreadStart{
+				thread, err := s.MessageThreadStartComplex(m.ChannelID, m.ID, &astatine.ThreadStart{
 					Name:                "Pong game with " + m.Author.Username,
 					AutoArchiveDuration: 60,
 					Invitable:           false,
@@ -48,7 +48,7 @@ func main() {
 			games[m.ChannelID] = time.Now()
 			<-time.After(timeout)
 			if time.Since(games[m.ChannelID]) >= timeout {
-				_, err := s.ChannelEditComplex(m.ChannelID, &discordgo.ChannelEdit{
+				_, err := s.ChannelEditComplex(m.ChannelID, &astatine.ChannelEdit{
 					Archived: true,
 					Locked:   true,
 				})
@@ -58,7 +58,7 @@ func main() {
 			}
 		}
 	})
-	s.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAllWithoutPrivileged)
+	s.Identify.Intents = astatine.MakeIntent(astatine.IntentsAllWithoutPrivileged)
 
 	err := s.Open()
 	if err != nil {

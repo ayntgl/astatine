@@ -1,4 +1,4 @@
-package discordgo
+package astatine
 
 import (
 	"fmt"

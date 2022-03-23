@@ -8,7 +8,7 @@
 // This file contains low level functions for interacting with the Discord
 // data websocket interface.
 
-package discordgo
+package astatine
 
 import (
 	"bytes"

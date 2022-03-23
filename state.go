@@ -10,7 +10,7 @@
 // events and maintain an in-memory state of of guilds, channels, users, and
 // so forth.  This information can be accessed through the Session.State struct.
 
-package discordgo
+package astatine
 
 import (
 	"errors"

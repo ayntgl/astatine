@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/ayntgl/astatine"
 )
 
 // Variables used for command line parameters
@@ -34,7 +34,7 @@ func init() {
 func main() {
 
 	// Create a new Discord session using the provided login information.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := astatine.New("Bot " + Token)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return

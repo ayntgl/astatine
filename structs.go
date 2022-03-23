@@ -9,7 +9,7 @@
 // may be moved about later into separate files but I find it easier to have
 // them all located together.
 
-package discordgo
+package astatine
 
 import (
 	"encoding/json"

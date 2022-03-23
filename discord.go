@@ -11,7 +11,7 @@
 // low level functions if that's a problem.
 
 // Package discordgo provides Discord binding for Go
-package discordgo
+package astatine
 
 import (
 	"net/http"

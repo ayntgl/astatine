@@ -1,10 +1,10 @@
-package discordgo_test
+package astatine_test
 
 import (
 	"log"
 	"os"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/ayntgl/astatine"
 )
 
 func ExampleApplication() {
@@ -16,14 +16,14 @@ func ExampleApplication() {
 	}
 
 	// Create a new Discordgo session
-	dg, err := discordgo.New(Token)
+	dg, err := astatine.New(Token)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
 	// Create an new Application
-	ap := &discordgo.Application{}
+	ap := &astatine.Application{}
 	ap.Name = "TestApp"
 	ap.Description = "TestDesc"
 	ap, err = dg.ApplicationCreate(ap)

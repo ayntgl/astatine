@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/ayntgl/astatine"
 	"github.com/pion/rtp"
 	"github.com/pion/webrtc/v3/pkg/media"
 	"github.com/pion/webrtc/v3/pkg/media/oggwriter"
@@ -25,7 +25,7 @@ func init() {
 	flag.Parse()
 }
 
-func createPionRTPPacket(p *discordgo.Packet) *rtp.Packet {
+func createPionRTPPacket(p *astatine.Packet) *rtp.Packet {
 	return &rtp.Packet{
 		Header: rtp.Header{
 			Version: 2,
@@ -39,7 +39,7 @@ func createPionRTPPacket(p *discordgo.Packet) *rtp.Packet {
 	}
 }
 
-func handleVoice(c chan *discordgo.Packet) {
+func handleVoice(c chan *astatine.Packet) {
 	files := make(map[uint32]media.Writer)
 	for p := range c {
 		file, ok := files[p.SSRC]
@@ -52,7 +52,7 @@ func handleVoice(c chan *discordgo.Packet) {
 			}
 			files[p.SSRC] = file
 		}
-		// Construct pion RTP packet from DiscordGo's type.
+		// Construct pion RTP packet from astatine's type.
 		rtp := createPionRTPPacket(p)
 		err := file.WriteRTP(rtp)
 		if err != nil {
@@ -67,7 +67,7 @@ func handleVoice(c chan *discordgo.Packet) {
 }
 
 func main() {
-	s, err := discordgo.New("Bot " + Token)
+	s, err := astatine.New("Bot " + Token)
 	if err != nil {
 		fmt.Println("error creating Discord session:", err)
 		return
@@ -75,7 +75,7 @@ func main() {
 	defer s.Close()
 
 	// We only really care about receiving voice state updates.
-	s.Identify.Intents = discordgo.IntentsGuildVoiceStates
+	s.Identify.Intents = astatine.IntentsGuildVoiceStates
 
 	err = s.Open()
 	if err != nil {
