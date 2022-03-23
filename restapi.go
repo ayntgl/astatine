@@ -116,8 +116,8 @@ func (s *Session) RequestWithLockedBucket(method, urlStr, contentType string, b 
 
 	// Not used on initial login..
 	// TODO: Verify if a login, otherwise complain about no-token
-	if s.Token != "" {
-		req.Header.Set("authorization", s.Token)
+	if s.Identify.Token != "" {
+		req.Header.Set("authorization", s.Identify.Token)
 	}
 
 	// Discord's API returns a 400 Bad Request is Content-Type is set, but the
@@ -195,7 +195,7 @@ func (s *Session) RequestWithLockedBucket(method, urlStr, contentType string, b 
 
 		response, err = s.RequestWithLockedBucket(method, urlStr, contentType, b, s.Ratelimiter.LockBucketObject(bucket), sequence)
 	case http.StatusUnauthorized:
-		if strings.Index(s.Token, "Bot ") != 0 {
+		if strings.Index(s.Identify.Token, "Bot ") != 0 {
 			s.log(LogInformational, ErrUnauthorized.Error())
 			err = ErrUnauthorized
 		}

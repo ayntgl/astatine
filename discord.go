@@ -53,7 +53,6 @@ func New(token string) (s *Session) {
 	s.Identify.Properties.Browser = "DiscordGo v" + VERSION
 	s.Identify.Intents = IntentsAllWithoutPrivileged
 	s.Identify.Token = token
-	s.Token = token
 
 	return
 }

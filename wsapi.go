@@ -138,7 +138,7 @@ func (s *Session) Open() error {
 		// Send Op 6 Resume Packet
 		p := resumePacket{}
 		p.Op = 6
-		p.Data.Token = s.Token
+		p.Data.Token = s.Identify.Token
 		p.Data.SessionID = s.sessionID
 		p.Data.Sequence = sequence
 
@@ -769,12 +769,6 @@ func (s *Session) identify() error {
 	// maintain backwards compatibility
 	if s.Compress == false {
 		s.Identify.Compress = false
-	}
-
-	// TODO: This is a temporary block of code to help
-	// maintain backwards compatibility
-	if s.Token != "" && s.Identify.Token == "" {
-		s.Identify.Token = s.Token
 	}
 
 	// TODO: Below block should be refactored so ShardID and ShardCount
