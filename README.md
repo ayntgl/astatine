@@ -6,10 +6,7 @@ A powerful, versatile, and efficient Discord API library.
 
 ## Getting Started
 
-### Installing
-
-This assumes you already have a working Go environment, if not please see
-[this page](https://golang.org/doc/install) first.
+### Installation
 
 ```
 go get github.com/ayntgl/astatine
