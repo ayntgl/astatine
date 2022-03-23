@@ -57,7 +57,7 @@ func TestNewToken(t *testing.T) {
 	}
 
 	if d.Identify.Token == "" {
-		t.Fatal("New(envToken), d.Token is empty, should be a valid Token.")
+		t.Fatal("New(envToken), d.Identify.Token is empty, should be a valid Token.")
 	}
 }
 
