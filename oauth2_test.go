@@ -16,17 +16,12 @@ func ExampleApplication() {
 	}
 
 	// Create a new Discordgo session
-	dg, err := astatine.New(Token)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
+	dg := astatine.New(Token)
 	// Create an new Application
 	ap := &astatine.Application{}
 	ap.Name = "TestApp"
 	ap.Description = "TestDesc"
-	ap, err = dg.ApplicationCreate(ap)
+	ap, err := dg.ApplicationCreate(ap)
 	log.Printf("ApplicationCreate: err: %+v, app: %+v\n", err, ap)
 
 	// Get a specific Application by it's ID

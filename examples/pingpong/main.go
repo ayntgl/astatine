@@ -16,7 +16,6 @@ var (
 )
 
 func init() {
-
 	flag.StringVar(&Token, "t", "", "Bot Token")
 	flag.Parse()
 }
@@ -24,11 +23,7 @@ func init() {
 func main() {
 
 	// Create a new Discord session using the provided bot token.
-	dg, err := astatine.New("Bot " + Token)
-	if err != nil {
-		fmt.Println("error creating Discord session,", err)
-		return
-	}
+	dg := astatine.New("Bot " + Token)
 
 	// Register the messageCreate func as a callback for MessageCreate events.
 	dg.AddHandler(messageCreate)
@@ -37,7 +32,7 @@ func main() {
 	dg.Identify.Intents = astatine.IntentsGuildMessages
 
 	// Open a websocket connection to Discord and begin listening.
-	err = dg.Open()
+	err := dg.Open()
 	if err != nil {
 		fmt.Println("error opening connection,", err)
 		return

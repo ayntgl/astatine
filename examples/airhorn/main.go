@@ -38,11 +38,7 @@ func main() {
 	}
 
 	// Create a new Discord session using the provided bot token.
-	dg, err := astatine.New("Bot " + token)
-	if err != nil {
-		fmt.Println("Error creating Discord session: ", err)
-		return
-	}
+	dg := astatine.New("Bot " + token)
 
 	// Register ready as a callback for the ready events.
 	dg.AddHandler(ready)
