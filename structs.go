@@ -30,10 +30,6 @@ type Session struct {
 
 	// General configurable settings.
 
-	// Authentication token for this session
-	// TODO: Remove Below, Deprecated, Use Identify struct
-	Token string
-
 	MFA bool
 
 	// Debug for printing JSON request/responses
