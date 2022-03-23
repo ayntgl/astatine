@@ -1,4 +1,4 @@
-module github.com/bwmarrin/discordgo
+module github.com/ayntgl/astatine
 
 go 1.13
 
