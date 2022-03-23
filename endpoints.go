@@ -42,6 +42,10 @@ var (
 	EndpointCDNBanners      = EndpointCDN + "banners/"
 	EndpointCDNGuilds       = EndpointCDN + "guilds/"
 
+	EndpointAuth  = EndpointAPI + "auth/"
+	EndpointLogin = EndpointAuth + "login"
+	EndpointTotp  = EndpointAuth + "mfa/totp"
+
 	EndpointVoice        = EndpointAPI + "/voice/"
 	EndpointVoiceRegions = EndpointVoice + "regions"
 
