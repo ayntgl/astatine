@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/ayntgl/astatine"
 )
 
 // Bot parameters
@@ -19,13 +19,13 @@ var (
 	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
 )
 
-var s *discordgo.Session
+var s *astatine.Session
 
 func init() { flag.Parse() }
 
 func init() {
 	var err error
-	s, err = discordgo.New("Bot " + *BotToken)
+	s, err = astatine.New("Bot " + *BotToken)
 	if err != nil {
 		log.Fatalf("Invalid bot parameters: %v", err)
 	}
@@ -34,7 +34,7 @@ func init() {
 var (
 	integerOptionMinValue = 1.0
 
-	commands = []*discordgo.ApplicationCommand{
+	commands = []*astatine.ApplicationCommand{
 		{
 			Name: "basic-command",
 			// All commands and options must have a description
@@ -49,16 +49,16 @@ var (
 		{
 			Name:        "options",
 			Description: "Command for demonstrating options",
-			Options: []*discordgo.ApplicationCommandOption{
+			Options: []*astatine.ApplicationCommandOption{
 
 				{
-					Type:        discordgo.ApplicationCommandOptionString,
+					Type:        astatine.ApplicationCommandOptionString,
 					Name:        "string-option",
 					Description: "String option",
 					Required:    true,
 				},
 				{
-					Type:        discordgo.ApplicationCommandOptionInteger,
+					Type:        astatine.ApplicationCommandOptionInteger,
 					Name:        "integer-option",
 					Description: "Integer option",
 					MinValue:    &integerOptionMinValue,
@@ -66,14 +66,14 @@ var (
 					Required:    true,
 				},
 				{
-					Type:        discordgo.ApplicationCommandOptionNumber,
+					Type:        astatine.ApplicationCommandOptionNumber,
 					Name:        "number-option",
 					Description: "Float option",
 					MaxValue:    10.1,
 					Required:    true,
 				},
 				{
-					Type:        discordgo.ApplicationCommandOptionBoolean,
+					Type:        astatine.ApplicationCommandOptionBoolean,
 					Name:        "bool-option",
 					Description: "Boolean option",
 					Required:    true,
@@ -84,24 +84,24 @@ var (
 				// The same concept applies to Discord's Slash-commands API
 
 				{
-					Type:        discordgo.ApplicationCommandOptionChannel,
+					Type:        astatine.ApplicationCommandOptionChannel,
 					Name:        "channel-option",
 					Description: "Channel option",
 					// Channel type mask
-					ChannelTypes: []discordgo.ChannelType{
-						discordgo.ChannelTypeGuildText,
-						discordgo.ChannelTypeGuildVoice,
+					ChannelTypes: []astatine.ChannelType{
+						astatine.ChannelTypeGuildText,
+						astatine.ChannelTypeGuildVoice,
 					},
 					Required: false,
 				},
 				{
-					Type:        discordgo.ApplicationCommandOptionUser,
+					Type:        astatine.ApplicationCommandOptionUser,
 					Name:        "user-option",
 					Description: "User option",
 					Required:    false,
 				},
 				{
-					Type:        discordgo.ApplicationCommandOptionRole,
+					Type:        astatine.ApplicationCommandOptionRole,
 					Name:        "role-option",
 					Description: "Role option",
 					Required:    false,
@@ -111,7 +111,7 @@ var (
 		{
 			Name:        "subcommands",
 			Description: "Subcommands and command groups example",
-			Options: []*discordgo.ApplicationCommandOption{
+			Options: []*astatine.ApplicationCommandOption{
 				// When a command has subcommands/subcommand groups
 				// It must not have top-level options, they aren't accesible in the UI
 				// in this case (at least not yet), so if a command has
@@ -121,17 +121,17 @@ var (
 				{
 					Name:        "scmd-grp",
 					Description: "Subcommands group",
-					Options: []*discordgo.ApplicationCommandOption{
+					Options: []*astatine.ApplicationCommandOption{
 						// Also, subcommand groups aren't capable of
 						// containing options, by the name of them, you can see
 						// they can only contain subcommands
 						{
 							Name:        "nst-subcmd",
 							Description: "Nested subcommand",
-							Type:        discordgo.ApplicationCommandOptionSubCommand,
+							Type:        astatine.ApplicationCommandOptionSubCommand,
 						},
 					},
-					Type: discordgo.ApplicationCommandOptionSubCommandGroup,
+					Type: astatine.ApplicationCommandOptionSubCommandGroup,
 				},
 				// Also, you can create both subcommand groups and subcommands
 				// in the command at the same time. But, there's some limits to
@@ -141,19 +141,19 @@ var (
 				{
 					Name:        "subcmd",
 					Description: "Top-level subcommand",
-					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Type:        astatine.ApplicationCommandOptionSubCommand,
 				},
 			},
 		},
 		{
 			Name:        "responses",
 			Description: "Interaction responses testing initiative",
-			Options: []*discordgo.ApplicationCommandOption{
+			Options: []*astatine.ApplicationCommandOption{
 				{
 					Name:        "resp-type",
 					Description: "Response type",
-					Type:        discordgo.ApplicationCommandOptionInteger,
-					Choices: []*discordgo.ApplicationCommandOptionChoice{
+					Type:        astatine.ApplicationCommandOptionInteger,
+					Choices: []*astatine.ApplicationCommandOptionChoice{
 						{
 							Name:  "Channel message with source",
 							Value: 4,
@@ -172,21 +172,21 @@ var (
 			Description: "Followup messages",
 		},
 	}
-	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"basic-command": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
+	commandHandlers = map[string]func(s *astatine.Session, i *astatine.InteractionCreate){
+		"basic-command": func(s *astatine.Session, i *astatine.InteractionCreate) {
+			s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+				Type: astatine.InteractionResponseChannelMessageWithSource,
+				Data: &astatine.InteractionResponseData{
 					Content: "Hey there! Congratulations, you just executed your first slash command",
 				},
 			})
 		},
-		"basic-command-with-files": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
+		"basic-command-with-files": func(s *astatine.Session, i *astatine.InteractionCreate) {
+			s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+				Type: astatine.InteractionResponseChannelMessageWithSource,
+				Data: &astatine.InteractionResponseData{
 					Content: "Hey there! Congratulations, you just executed your first slash command with a file in the response",
-					Files: []*discordgo.File{
+					Files: []*astatine.File{
 						{
 							ContentType: "text/plain",
 							Name:        "test.txt",
@@ -196,7 +196,7 @@ var (
 				},
 			})
 		},
-		"options": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		"options": func(s *astatine.Session, i *astatine.InteractionCreate) {
 			margs := []interface{}{
 				// Here we need to convert raw interface{} value to wanted type.
 				// Also, as you can see, here is used utility functions to convert the value
@@ -226,10 +226,10 @@ var (
 				margs = append(margs, i.ApplicationCommandData().Options[6].RoleValue(nil, "").ID)
 				msgformat += "> role-option: <@&%s>\n"
 			}
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
 				// Ignore type for now, we'll discuss them in "responses" part
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
+				Type: astatine.InteractionResponseChannelMessageWithSource,
+				Data: &astatine.InteractionResponseData{
 					Content: fmt.Sprintf(
 						msgformat,
 						margs...,
@@ -237,7 +237,7 @@ var (
 				},
 			})
 		},
-		"subcommands": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		"subcommands": func(s *astatine.Session, i *astatine.InteractionCreate) {
 			content := ""
 
 			// As you can see, the name of subcommand (nested, top-level) or subcommand group
@@ -259,14 +259,14 @@ var (
 						"Hol' up, you aren't supposed to see this message."
 				}
 			}
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
+			s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+				Type: astatine.InteractionResponseChannelMessageWithSource,
+				Data: &astatine.InteractionResponseData{
 					Content: content,
 				},
 			})
 		},
-		"responses": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		"responses": func(s *astatine.Session, i *astatine.InteractionCreate) {
 			// Responses to a command are very important.
 			// First of all, because you need to react to the interaction
 			// by sending the response in 3 seconds after receiving, otherwise
@@ -277,44 +277,44 @@ var (
 			// As you can see, the response type names used here are pretty self-explanatory,
 			// but for those who want more information see the official documentation
 			switch i.ApplicationCommandData().Options[0].IntValue() {
-			case int64(discordgo.InteractionResponseChannelMessageWithSource):
+			case int64(astatine.InteractionResponseChannelMessageWithSource):
 				content =
 					"You just responded to an interaction, sent a message and showed the original one. " +
 						"Congratulations!"
 				content +=
 					"\nAlso... you can edit your response, wait 5 seconds and this message will be changed"
 			default:
-				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseType(i.ApplicationCommandData().Options[0].IntValue()),
+				err := s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+					Type: astatine.InteractionResponseType(i.ApplicationCommandData().Options[0].IntValue()),
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &astatine.WebhookParams{
 						Content: "Something went wrong",
 					})
 				}
 				return
 			}
 
-			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseType(i.ApplicationCommandData().Options[0].IntValue()),
-				Data: &discordgo.InteractionResponseData{
+			err := s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+				Type: astatine.InteractionResponseType(i.ApplicationCommandData().Options[0].IntValue()),
+				Data: &astatine.InteractionResponseData{
 					Content: content,
 				},
 			})
 			if err != nil {
-				s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &astatine.WebhookParams{
 					Content: "Something went wrong",
 				})
 				return
 			}
 			time.AfterFunc(time.Second*5, func() {
-				_, err = s.InteractionResponseEdit(s.State.User.ID, i.Interaction, &discordgo.WebhookEdit{
+				_, err = s.InteractionResponseEdit(s.State.User.ID, i.Interaction, &astatine.WebhookEdit{
 					Content: content + "\n\nWell, now you know how to create and edit responses. " +
 						"But you still don't know how to delete them... so... wait 10 seconds and this " +
 						"message will be deleted.",
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &astatine.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -323,14 +323,14 @@ var (
 				s.InteractionResponseDelete(s.State.User.ID, i.Interaction)
 			})
 		},
-		"followups": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		"followups": func(s *astatine.Session, i *astatine.InteractionCreate) {
 			// Followup messages are basically regular messages (you can create as many of them as you wish)
 			// but work as they are created by webhooks and their functionality
 			// is for handling additional messages after sending a response.
 
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
+			s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+				Type: astatine.InteractionResponseChannelMessageWithSource,
+				Data: &astatine.InteractionResponseData{
 					// Note: this isn't documented, but you can use that if you want to.
 					// This flag just allows you to create messages visible only for the caller of the command
 					// (user who triggered the command)
@@ -338,18 +338,18 @@ var (
 					Content: "Surprise!",
 				},
 			})
-			msg, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+			msg, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &astatine.WebhookParams{
 				Content: "Followup message has been created, after 5 seconds it will be edited",
 			})
 			if err != nil {
-				s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &astatine.WebhookParams{
 					Content: "Something went wrong",
 				})
 				return
 			}
 			time.Sleep(time.Second * 5)
 
-			s.FollowupMessageEdit(s.State.User.ID, i.Interaction, msg.ID, &discordgo.WebhookEdit{
+			s.FollowupMessageEdit(s.State.User.ID, i.Interaction, msg.ID, &astatine.WebhookEdit{
 				Content: "Now the original message is gone and after 10 seconds this message will ~~self-destruct~~ be deleted.",
 			})
 
@@ -357,7 +357,7 @@ var (
 
 			s.FollowupMessageDelete(s.State.User.ID, i.Interaction, msg.ID)
 
-			s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+			s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &astatine.WebhookParams{
 				Content: "For those, who didn't skip anything and followed tutorial along fairly, " +
 					"take a unicorn :unicorn: as reward!\n" +
 					"Also, as bonus... look at the original interaction response :D",
@@ -367,7 +367,7 @@ var (
 )
 
 func init() {
-	s.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	s.AddHandler(func(s *astatine.Session, i *astatine.InteractionCreate) {
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
 			h(s, i)
 		}
@@ -375,7 +375,7 @@ func init() {
 }
 
 func main() {
-	s.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+	s.AddHandler(func(s *astatine.Session, r *astatine.Ready) {
 		log.Printf("Logged in as: %v#%v", s.State.User.Username, s.State.User.Discriminator)
 	})
 	err := s.Open()
@@ -384,7 +384,7 @@ func main() {
 	}
 
 	log.Println("Adding commands...")
-	registeredCommands := make([]*discordgo.ApplicationCommand, len(commands))
+	registeredCommands := make([]*astatine.ApplicationCommand, len(commands))
 	for i, v := range commands {
 		cmd, err := s.ApplicationCommandCreate(s.State.User.ID, *GuildID, v)
 		if err != nil {

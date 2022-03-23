@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/ayntgl/astatine"
 )
 
 // Variables used for command line parameters
@@ -22,7 +22,7 @@ func init() {
 
 func main() {
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := astatine.New("Bot " + Token)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
@@ -33,7 +33,7 @@ func main() {
 
 	// Just like the ping pong example, we only care about receiving message
 	// events in this example.
-	dg.Identify.Intents = discordgo.IntentsGuildMessages
+	dg.Identify.Intents = astatine.IntentsGuildMessages
 
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
@@ -57,7 +57,7 @@ func main() {
 //
 // It is called whenever a message is created but only when it's sent through a
 // server as we did not request IntentsDirectMessages.
-func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+func messageCreate(s *astatine.Session, m *astatine.MessageCreate) {
 	// Ignore all messages created by the bot itself
 	// This isn't required in this specific example but it's a good practice.
 	if m.Author.ID == s.State.User.ID {

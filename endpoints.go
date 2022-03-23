@@ -9,7 +9,7 @@
 // throughout the Discordgo package use these variables for all connections
 // to Discord.  These are all exported and you may modify them if needed.
 
-package discordgo
+package astatine
 
 import "strconv"
 

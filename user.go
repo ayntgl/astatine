@@ -1,4 +1,4 @@
-package discordgo
+package astatine
 
 // UserFlags is the flags of "user" (see UserFlags* consts)
 // https://discord.com/developers/docs/resources/user#user-object-user-flags

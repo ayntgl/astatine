@@ -8,7 +8,7 @@
 // This file contains functions for interacting with the Discord REST/JSON API
 // at the lowest level.
 
-package discordgo
+package astatine
 
 import (
 	"bytes"

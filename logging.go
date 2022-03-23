@@ -7,7 +7,7 @@
 
 // This file contains code related to discordgo package logging
 
-package discordgo
+package astatine
 
 import (
 	"fmt"

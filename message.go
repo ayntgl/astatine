@@ -7,7 +7,7 @@
 
 // This file contains code related to the Message struct
 
-package discordgo
+package astatine
 
 import (
 	"encoding/json"

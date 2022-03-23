@@ -7,7 +7,7 @@
 
 // This file contains code related to Discord voice suppport
 
-package discordgo
+package astatine
 
 import (
 	"encoding/binary"

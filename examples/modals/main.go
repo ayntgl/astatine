@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/ayntgl/astatine"
 )
 
 // Bot parameters
@@ -20,7 +20,7 @@ var (
 	ResultsChannel = flag.String("results", "", "Channel where send survey results to")
 )
 
-var s *discordgo.Session
+var s *astatine.Session
 
 func init() {
 	flag.Parse()
@@ -28,33 +28,33 @@ func init() {
 
 func init() {
 	var err error
-	s, err = discordgo.New("Bot " + *BotToken)
+	s, err = astatine.New("Bot " + *BotToken)
 	if err != nil {
 		log.Fatalf("Invalid bot parameters: %v", err)
 	}
 }
 
 var (
-	commands = []discordgo.ApplicationCommand{
+	commands = []astatine.ApplicationCommand{
 		{
 			Name:        "modals-survey",
 			Description: "Take a survey about modals",
 		},
 	}
-	commandsHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"modals-survey": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseModal,
-				Data: &discordgo.InteractionResponseData{
+	commandsHandlers = map[string]func(s *astatine.Session, i *astatine.InteractionCreate){
+		"modals-survey": func(s *astatine.Session, i *astatine.InteractionCreate) {
+			err := s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+				Type: astatine.InteractionResponseModal,
+				Data: &astatine.InteractionResponseData{
 					CustomID: "modals_survey_" + i.Interaction.Member.User.ID,
 					Title:    "Modals survey",
-					Components: []discordgo.MessageComponent{
-						discordgo.ActionsRow{
-							Components: []discordgo.MessageComponent{
-								discordgo.TextInput{
+					Components: []astatine.MessageComponent{
+						astatine.ActionsRow{
+							Components: []astatine.MessageComponent{
+								astatine.TextInput{
 									CustomID:    "opinion",
 									Label:       "What is your opinion on them?",
-									Style:       discordgo.TextInputShort,
+									Style:       astatine.TextInputShort,
 									Placeholder: "Don't be shy, share your opinion with us",
 									Required:    true,
 									MaxLength:   300,
@@ -62,12 +62,12 @@ var (
 								},
 							},
 						},
-						discordgo.ActionsRow{
-							Components: []discordgo.MessageComponent{
-								discordgo.TextInput{
+						astatine.ActionsRow{
+							Components: []astatine.MessageComponent{
+								astatine.TextInput{
 									CustomID:  "suggestions",
 									Label:     "What would you suggest to improve them?",
-									Style:     discordgo.TextInputParagraph,
+									Style:     astatine.TextInputParagraph,
 									Required:  false,
 									MaxLength: 2000,
 								},
@@ -84,20 +84,20 @@ var (
 )
 
 func main() {
-	s.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+	s.AddHandler(func(s *astatine.Session, r *astatine.Ready) {
 		log.Println("Bot is up!")
 	})
 
-	s.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	s.AddHandler(func(s *astatine.Session, i *astatine.InteractionCreate) {
 		switch i.Type {
-		case discordgo.InteractionApplicationCommand:
+		case astatine.InteractionApplicationCommand:
 			if h, ok := commandsHandlers[i.ApplicationCommandData().Name]; ok {
 				h(s, i)
 			}
-		case discordgo.InteractionModalSubmit:
-			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
+		case astatine.InteractionModalSubmit:
+			err := s.InteractionRespond(i.Interaction, &astatine.InteractionResponse{
+				Type: astatine.InteractionResponseChannelMessageWithSource,
+				Data: &astatine.InteractionResponseData{
 					Content: "Thank you for taking your time to fill this survey",
 					Flags:   1 << 6,
 				},
@@ -115,8 +115,8 @@ func main() {
 			_, err = s.ChannelMessageSend(*ResultsChannel, fmt.Sprintf(
 				"Feedback received. From <@%s>\n\n**Opinion**:\n%s\n\n**Suggestions**:\n%s",
 				userid,
-				data.Components[0].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value,
-				data.Components[1].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value,
+				data.Components[0].(*astatine.ActionsRow).Components[0].(*astatine.TextInput).Value,
+				data.Components[1].(*astatine.ActionsRow).Components[0].(*astatine.TextInput).Value,
 			))
 			if err != nil {
 				panic(err)
