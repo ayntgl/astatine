@@ -14,9 +14,11 @@
 package astatine
 
 import (
-	"net/http"
+	netHttp "net/http"
 	"runtime"
 	"time"
+
+	"github.com/ayntgl/astatine/http"
 )
 
 // VERSION of DiscordGo, follows Semantic Versioning. (http://semver.org/)
@@ -32,14 +34,14 @@ func New(token string) (s *Session) {
 	// Create an empty Session interface.
 	s = &Session{
 		State:                  NewState(),
-		Ratelimiter:            NewRatelimiter(),
+		Ratelimiter:            http.NewRatelimiter(),
 		StateEnabled:           true,
 		Compress:               true,
 		ShouldReconnectOnError: true,
 		ShardID:                0,
 		ShardCount:             1,
 		MaxRestRetries:         3,
-		Client:                 &http.Client{Timeout: (20 * time.Second)},
+		Client:                 &netHttp.Client{Timeout: (20 * time.Second)},
 		UserAgent:              "DiscordBot (https://github.com/bwmarrin/discordgo, v" + VERSION + ")",
 		sequence:               new(int64),
 		LastHeartbeatAck:       time.Now().UTC(),

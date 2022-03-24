@@ -1,4 +1,4 @@
-package astatine
+package http
 
 import (
 	"fmt"

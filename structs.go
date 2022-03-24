@@ -15,12 +15,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"net/http"
+	netHttp "net/http"
 	"regexp"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/ayntgl/astatine/http"
 	"github.com/gorilla/websocket"
 )
 
@@ -86,7 +87,7 @@ type Session struct {
 	State *State
 
 	// The http client used for REST requests
-	Client *http.Client
+	Client *netHttp.Client
 
 	// The user agent used for REST APIs
 	UserAgent string
@@ -98,7 +99,7 @@ type Session struct {
 	LastHeartbeatSent time.Time
 
 	// used to deal with rate limits
-	Ratelimiter *RateLimiter
+	Ratelimiter *http.RateLimiter
 
 	// Event handlers
 	handlersMu   sync.RWMutex
@@ -146,7 +147,7 @@ type Application struct {
 	Flags               int      `json:"flags,omitempty"`
 }
 
-// UserConnection is a Connection returned from the UserConnections endpoint
+// UserConnection is a Connection returned from the UserConnections http.Endpoint
 type UserConnection struct {
 	ID           string         `json:"id"`
 	Name         string         `json:"name"`
@@ -182,7 +183,7 @@ const (
 )
 
 // IntegrationAccount is integration account information
-// sent by the UserConnections endpoint
+// sent by the UserConnections http.Endpoint
 type IntegrationAccount struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
@@ -329,7 +330,7 @@ type Channel struct {
 
 	// Thread-specific fields not needed by other channels
 	ThreadMetadata *ThreadMetadata `json:"thread_metadata,omitempty"`
-	// Thread member object for the current user, if they have joined the thread, only included on certain API endpoints
+	// Thread member object for the current user, if they have joined the thread, only included on certain API http.Endpoints
 	Member *ThreadMember `json:"thread_member"`
 
 	// All thread members. State channels only.
@@ -470,7 +471,7 @@ func (e *Emoji) MessageFormat() string {
 	return e.APIName()
 }
 
-// APIName returns an correctly formatted API name for use in the MessageReactions endpoints.
+// APIName returns an correctly formatted API name for use in the MessageReactions http.Endpoints.
 func (e *Emoji) APIName() string {
 	if e.ID != "" && e.Name != "" {
 		return e.Name + ":" + e.ID
@@ -719,10 +720,10 @@ type Guild struct {
 	// The maximum amount of users in a video channel
 	MaxVideoChannelUsers int `json:"max_video_channel_users"`
 
-	// Approximate number of members in this guild, returned from the GET /guild/<id> endpoint when with_counts is true
+	// Approximate number of members in this guild, returned from the GET /guild/<id> http.Endpoint when with_counts is true
 	ApproximateMemberCount int `json:"approximate_member_count"`
 
-	// Approximate number of non-offline members in this guild, returned from the GET /guild/<id> endpoint when with_counts is true
+	// Approximate number of non-offline members in this guild, returned from the GET /guild/<id> http.Endpoint when with_counts is true
 	ApproximatePresenceCount int `json:"approximate_presence_count"`
 
 	// Permissions of our user
@@ -753,10 +754,10 @@ type GuildPreview struct {
 	// The list of enabled guild features
 	Features []string `json:"features"`
 
-	// Approximate number of members in this guild, returned from the GET /guild/<id> endpoint when with_counts is true
+	// Approximate number of members in this guild, returned from the GET /guild/<id> http.Endpoint when with_counts is true
 	ApproximateMemberCount int `json:"approximate_member_count"`
 
-	// Approximate number of non-offline members in this guild, returned from the GET /guild/<id> endpoint when with_counts is true
+	// Approximate number of non-offline members in this guild, returned from the GET /guild/<id> http.Endpoint when with_counts is true
 	ApproximatePresenceCount int `json:"approximate_presence_count"`
 
 	// the description for the guild
@@ -969,10 +970,10 @@ func (g *Guild) IconURL() string {
 	}
 
 	if strings.HasPrefix(g.Icon, "a_") {
-		return EndpointGuildIconAnimated(g.ID, g.Icon)
+		return http.EndpointGuildIconAnimated(g.ID, g.Icon)
 	}
 
-	return EndpointGuildIcon(g.ID, g.Icon)
+	return http.EndpointGuildIcon(g.ID, g.Icon)
 }
 
 // BannerURL returns a URL to the guild's banner.
@@ -980,7 +981,7 @@ func (g *Guild) BannerURL() string {
 	if g.Banner == "" {
 		return ""
 	}
-	return EndpointGuildBanner(g.ID, g.Banner)
+	return http.EndpointGuildBanner(g.ID, g.Banner)
 }
 
 // A UserGuild holds a brief version of a Guild
@@ -1161,8 +1162,8 @@ func (m *Member) AvatarURL(size string) string {
 		return m.User.AvatarURL(size)
 	}
 	// The default/empty avatar case should be handled by the above condition
-	return avatarURL(m.Avatar, "", EndpointGuildMemberAvatar(m.GuildID, m.User.ID, m.Avatar),
-		EndpointGuildMemberAvatarAnimated(m.GuildID, m.User.ID, m.Avatar), size)
+	return avatarURL(m.Avatar, "", http.EndpointGuildMemberAvatar(m.GuildID, m.User.ID, m.Avatar),
+		http.EndpointGuildMemberAvatarAnimated(m.GuildID, m.User.ID, m.Avatar), size)
 
 }
 

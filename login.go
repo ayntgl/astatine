@@ -1,6 +1,10 @@
 package astatine
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/ayntgl/astatine/http"
+)
 
 type LoginResponse struct {
 	Mfa    bool   `json:"mfa"`
@@ -14,7 +18,7 @@ func (s *Session) Login(email, password string) (*LoginResponse, error) {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}{email, password}
-	resp, err := s.RequestWithBucketID("POST", EndpointLogin, data, EndpointLogin)
+	resp, err := s.RequestWithBucketID("POST", http.EndpointLogin, data, http.EndpointLogin)
 
 	var lr *LoginResponse
 	err = json.Unmarshal(resp, &lr)
@@ -30,7 +34,7 @@ func (s *Session) Totp(code, ticket string) (*LoginResponse, error) {
 		Code   string `json:"code"`
 		Ticket string `json:"ticket"`
 	}{code, ticket}
-	resp, err := s.RequestWithBucketID("POST", EndpointTotp, data, EndpointTotp)
+	resp, err := s.RequestWithBucketID("POST", http.EndpointTotp, data, http.EndpointTotp)
 	if err != nil {
 		return nil, err
 	}
