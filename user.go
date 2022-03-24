@@ -1,5 +1,7 @@
 package astatine
 
+import "github.com/ayntgl/astatine/http"
+
 // UserFlags is the flags of "user" (see UserFlags* consts)
 // https://discord.com/developers/docs/resources/user#user-object-user-flags
 type UserFlags int
@@ -95,13 +97,13 @@ func (u *User) Mention() string {
 //             if size is an empty string, no size parameter will
 //             be added to the URL.
 func (u *User) AvatarURL(size string) string {
-	return avatarURL(u.Avatar, EndpointDefaultUserAvatar(u.Discriminator),
-		EndpointUserAvatar(u.ID, u.Avatar), EndpointUserAvatarAnimated(u.ID, u.Avatar), size)
+	return avatarURL(u.Avatar, http.EndpointDefaultUserAvatar(u.Discriminator),
+		http.EndpointUserAvatar(u.ID, u.Avatar), http.EndpointUserAvatarAnimated(u.ID, u.Avatar), size)
 }
 
 // BannerURL returns the URL of the users's banner image.
 //    size:    The size of the desired banner image as a power of two
 //             Image size can be any power of two between 16 and 4096.
 func (u *User) BannerURL(size string) string {
-	return bannerURL(u.Banner, EndpointUserBanner(u.ID, u.Banner), EndpointUserBannerAnimated(u.ID, u.Banner), size)
+	return bannerURL(u.Banner, http.EndpointUserBanner(u.ID, u.Banner), http.EndpointUserBannerAnimated(u.ID, u.Banner), size)
 }

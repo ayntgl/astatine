@@ -17,10 +17,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
+	netHttp "net/http"
 	"sync/atomic"
 	"time"
 
+	"github.com/ayntgl/astatine/http"
 	"github.com/gorilla/websocket"
 )
 
@@ -70,12 +71,12 @@ func (s *Session) Open() error {
 		}
 
 		// Add the version and encoding to the URL
-		s.gateway = s.gateway + "?v=" + APIVersion + "&encoding=json"
+		s.gateway = s.gateway + "?v=" + http.APIVersion + "&encoding=json"
 	}
 
 	// Connect to the Gateway
 	s.log(LogInformational, "connecting to gateway %s", s.gateway)
-	header := http.Header{}
+	header := netHttp.Header{}
 	header.Add("accept-encoding", "zlib")
 	s.wsConn, _, err = websocket.DefaultDialer.Dial(s.gateway, header)
 	if err != nil {
